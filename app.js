@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
 mongoose.connect(process.env.MONGODB_URI,
     {
         useNewUrlParser: true,
@@ -14,13 +13,13 @@ mongoose.connect(process.env.MONGODB_URI,
     
 require('./api/models/pessoa');
 require('./api/models/endereco');
-
 const app = express();
-
-const pessoaRoutes = require('./api/routes/pessoa');
-const enderecoRoutes = require('./api/routes/endereco');
+const pessoaRoutes = require('./api/routes/pessoas');
+const enderecoRoutes = require('./api/routes/enderecos');
 
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 const cors = (req, res, next) => {
     const whitelist = [
@@ -31,25 +30,22 @@ const cors = (req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
     }
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'token,Content-Type,Authorization, x-access-token');
     next();
 }
 app.use(cors);
-
 app.use('/pessoas', pessoaRoutes);
-app.use('/endereco', enderecoRoutes);
-
+app.use('/enderecos', enderecoRoutes);
 app.use('/api', (req, res, next) => {
     res.status(200).json({
         message: 'Hello word!'
     })
 })
-
 app.use((req, res, next) => {
     const error = new Error('Not Found')
     error.status = 404;
     next(error);
 });
-
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
@@ -58,5 +54,4 @@ app.use((error, req, res, next) => {
         }
     })
 });
-
 module.exports = app;

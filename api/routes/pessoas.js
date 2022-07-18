@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 
-const PessoaModel = mongoose.model('Pessoas');
+const PessoaModel = mongoose.model('Pessoa');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -36,17 +36,17 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try{
         const pessoa = new PessoaModel({
-            nome: pessoa.body.nome,
-            sobrenome: pessoa.body.sobrenome,
-            email: pessoa.body.email,
-            telefone: pessoa.body.telefone,
-            status: pessoa.body.status,
+            nome: req.body.nome,
+            sobrenome: req.body.sobrenome,
+            email: req.body.email,
+            telefone: req.body.telefone,
+            status: req.body.status
         });
         await pessoa.save();
         res.status(201).json({
             message: 'Pessoa cadastrada com sucesso!',
             createdPessoa: {
-                nome: pessoa.nome,
+                    nome: pessoa.nome,
                     sobrenome: pessoa.sobrenome,
                     email: pessoa.email,
                     telefone: pessoa.telefone,
@@ -99,7 +99,7 @@ router.patch('/:pessoaId', async (req, res, next) => {
             { $set: updateCampos});
 
         res.status(200).json({
-            message: 'Cadastro de pessoa atualizado',
+            message: 'Cadastro de pessoas atualizado',
             status: status,
             request: {
               type: "GET",

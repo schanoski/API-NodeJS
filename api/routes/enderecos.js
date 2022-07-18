@@ -59,12 +59,12 @@ router.post('/', async (req, res, next) => {
         if (pessoa) {
             let endereco = new EnderecoModel ({
                 pessoa: req.body.pessoaId,
-                cep: endereco.body.cep,
-                logradouro: endereco.body.logradouro,
-                complemento: endereco.body.complemento,
-                bairro : endereco.body.bairro,
-                cidade : endereco.body.cidade,
-                uf : endereco.body.uf,
+                cep: req.body.cep,
+                logradouro: req.body.logradouro,
+                complemento: req.body.complemento,
+                bairro : req.body.bairro,
+                cidade : req.body.cidade,
+                uf : req.body.uf,
             });
             endereco = await endereco.save();
             res.status(201).json({
