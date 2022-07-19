@@ -32,13 +32,13 @@ router.get('/', async (req, res, next) => {
         console.log(err);
         res.status(500).json(err);
     }
-});
+});         
 
 router.post('/', async (req, res, next) => {
     try {
         if (!req.body.pessoaId) {
             res.status(404)
-            .json({message: "Pessoa não existente"});
+            .json({message: "Pessoa não existe"});
             return;
         }
 
@@ -48,7 +48,7 @@ router.post('/', async (req, res, next) => {
             .findOne({_id: req.body.pessoaId});
             if (!pessoa) {
                 res.status(404)
-                .json({message: "Pessoa não existente"});
+                .json({message: "Pessoa não existe"});
                 return;
             }
         } catch (err) {
@@ -62,19 +62,20 @@ router.post('/', async (req, res, next) => {
                 cep: req.body.cep,
                 logradouro: req.body.logradouro,
                 complemento: req.body.complemento,
-                bairro : req.body.bairro,
-                cidade : req.body.cidade,
-                uf : req.body.uf,
+                bairro: req.body.bairro,
+                cidade: req.body.cidade,
+                uf: req.body.uf
             });
             endereco = await endereco.save();
             res.status(201).json({
                 message: 'Endereco criado com sucesso!',
                 createdEndereco: {
+                    pessoa: endereco.pessoa,
                     cep: endereco.cep,
                     logradouro: endereco.logradouro,
                     complemento: endereco.complemento,
-                    bairro : endereco.bairro,
-                    cidade : endereco.cidade,
+                    bairro: endereco.bairro,
+                    cidade: endereco.cidade,
                     uf : endereco.uf,
                     _id: endereco._id,
                     request: {
@@ -89,6 +90,7 @@ router.post('/', async (req, res, next) => {
         res.status(500).json(err);
     }
 });
+
 
 
 router.get('/:enderecoId', async (req, res, next) => {
