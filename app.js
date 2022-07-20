@@ -38,7 +38,7 @@ app.use('/pessoas', pessoaRoutes);
 app.use('/enderecos', enderecoRoutes);
 app.use('/api', (req, res, next) => {
     res.status(200).json({
-        message: 'Hello word!'
+        message: 'API Acessada!'
     })
 })
 app.use((req, res, next) => {

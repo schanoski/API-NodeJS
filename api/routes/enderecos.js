@@ -32,66 +32,60 @@ router.get('/', async (req, res, next) => {
         console.log(err);
         res.status(500).json(err);
     }
-});         
-
-router.post('/', async (req, res, next) => {
-    try {
-        if (!req.body.pessoaId) {
-            res.status(404)
-            .json({message: "Pessoa não existe"});
-            return;
-        }
-
-        let pessoa = null;
-        try {
-            pessoa = await PessoaModel
-            .findOne({_id: req.body.pessoaId});
-            if (!pessoa) {
-                res.status(404)
-                .json({message: "Pessoa não existe"});
-                return;
-            }
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
-
-        if (pessoa) {
-            let endereco = new EnderecoModel ({
-                pessoa: req.body.pessoaId,
-                cep: req.body.cep,
-                logradouro: req.body.logradouro,
-                complemento: req.body.complemento,
-                bairro: req.body.bairro,
-                cidade: req.body.cidade,
-                uf: req.body.uf
-            });
-            endereco = await endereco.save();
-            res.status(201).json({
-                message: 'Endereco criado com sucesso!',
-                createdEndereco: {
-                    pessoa: endereco.pessoa,
-                    cep: endereco.cep,
-                    logradouro: endereco.logradouro,
-                    complemento: endereco.complemento,
-                    bairro: endereco.bairro,
-                    cidade: endereco.cidade,
-                    uf : endereco.uf,
-                    _id: endereco._id,
-                    request: {
-                        type: "GET",
-                        url: "http://localhost:3000/enderecos/" + endereco._id
-                    }
-                }
-            })
-        }
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
 });
 
 
+router.post('/', async (req, res, next) => {
+
+
+    try {
+        let pessoa = null;
+        try {
+            pessoa = await PessoaModel.findById(req.body.pessoa)
+            if (!pessoa || !req.body.pessoa._id) {
+                res.status(404).json({
+                    message: 'Pessoa not found'
+                })
+                return;
+            }
+        } catch (error) {
+            res.status(500).json(error)
+        }
+
+        let endereco = new EnderecoModel({
+            pessoa: req.body.pessoa._id,
+            cep: req.body.cep,
+            logradouro: req.body.logradouro,
+            complemento: req.body.complemento,
+            bairro: req.body.bairro,
+            cidade: req.body.cidade,
+            uf: req.body.uf
+        })
+
+        endereco = await endereco.save()
+
+        console.log(endereco)
+        res.status(201).json({
+            message: 'Endereco criado com sucesso!',
+            createdEndereco: {
+                pessoa: endereco.pessoa,
+                cep: endereco.cep,
+                logradouro: endereco.logradouro,
+                complemento: endereco.complemento,
+                bairro: endereco.bairro,
+                cidade: endereco.cidade,
+                uf : endereco.uf,
+                _id: endereco._id,
+                request: {
+                    type: "GET",
+                    url: "http://localhost:3000/enderecos/" + endereco._id
+                }
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
 
 router.get('/:enderecoId', async (req, res, next) => {
     const id = req.params.enderecoId;
