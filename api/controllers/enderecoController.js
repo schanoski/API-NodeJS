@@ -29,7 +29,7 @@ module.exports = {
     },
 
     async postEndereco(req, res, next){
-        let pessoa = await PessoaModel.findOne({ _id: req.body.pessoa_id });
+        let pessoa = await PessoaModel.findById(req.body.pessoa);
 
         if (!pessoa) {
             res.status(404).json({
