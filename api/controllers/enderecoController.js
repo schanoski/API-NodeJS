@@ -96,6 +96,17 @@ module.exports = {
         })
     },
 
-
+    async patchEndereco(req, res, next){
+        const updateCampos = {};
+        Object.entries(req.body).map(endereco => {
+            console.log(endereco);
+            updateCampos[endereco[0]] = endereco[1];
+        })
+        const endereco = await EnderecoModel.findOneAndUpdate({ _id: req.params.id }, updateCampos, { new: true });
+        res.status(200).json({
+            result: endereco,
+            url:`${process.env.URL}:${process.env.PORT}/api/enderecos/${endereco._id}`
+        });
+    }
 
 }

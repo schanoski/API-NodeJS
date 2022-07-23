@@ -91,8 +91,6 @@ module.exports = {
         })
     },
 
-
-
     async deletePessoa(res, req, next){
         const id = req.params.pessoaId;
         let status = await PessoaModel.deleteOne({_id: id});
