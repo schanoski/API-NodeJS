@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { patch } = require('../routes/pessoas');
 const PessoaModel = mongoose.model('Pessoa')
 
 module.exports = {
@@ -91,15 +90,12 @@ module.exports = {
         })
     },
 
-    async deletePessoa(res, req, next){
-        const id = req.params.pessoaId;
+    async deletarPessoa(req, res, next){
+        let id = req.params.pessoaId;
         let status = await PessoaModel.deleteOne({_id: id});
         res.status(200).json({
             message: 'Pessoa deletada',
             status: status
         })
     }
-
-
-
 }
